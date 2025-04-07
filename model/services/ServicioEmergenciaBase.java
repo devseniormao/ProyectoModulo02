@@ -8,11 +8,13 @@ public abstract class ServicioEmergenciaBase implements IServicioEmergencia {
   private String id;
   private int personalDisponible;
   private double combustible;
+  private boolean atendiendoEmergencia;
 
   public ServicioEmergenciaBase(String id, int personalDisponible, double combustible) {
     this.id = id;
     this.personalDisponible = personalDisponible;
     this.combustible = combustible;
+    this.atendiendoEmergencia = false;
   }
 
   public String getId() {
@@ -25,6 +27,10 @@ public abstract class ServicioEmergenciaBase implements IServicioEmergencia {
 
   public double getCombustible() {
     return combustible;
+  }
+
+  public boolean isAtendiendoEmergencia() {
+    return atendiendoEmergencia;
   }
 
   @Override

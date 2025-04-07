@@ -1,12 +1,13 @@
 package model.strategy;
 
 import model.factoryEmerencias.Emergencia;
+import utils.Ubicacion;
 
 public class StrategyPrioridadCercania implements IPrioridad {
 
     private class MapaUrbano {
-        public int calcularDistancia(String ubicacion) {
-            switch(ubicacion.toLowerCase()){
+        public int calcularDistancia(Ubicacion ubicacion) {
+            switch(ubicacion.toString().toLowerCase()) {
                 case "centro": return 2;//8 -> 1to Cercano
                 case "este": return 5;//5   -> 2to Cercano
                 case "oeste": return 6;//4  -> 3to Cercano

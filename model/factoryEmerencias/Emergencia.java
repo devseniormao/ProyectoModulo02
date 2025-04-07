@@ -1,18 +1,19 @@
 package model.factoryEmerencias;
 
 import utils.TipoEmergencia;
+import utils.Ubicacion;
 import utils.NivelGravedad;
 
 public class Emergencia {
     private TipoEmergencia tipo;
-    private String ubicacion;
+    private Ubicacion ubicacion;
     private NivelGravedad nivelGravedad;
     private int tiempoRespuesta;// en minutos
     private boolean atendida;
     private long tiempoInicioAtencion;
     private long tiempoFinalAtencion;
     
-    public Emergencia(TipoEmergencia tipo, String ubicacion, NivelGravedad nivelGravedad, int tiempoRespuesta) {
+    public Emergencia(TipoEmergencia tipo, Ubicacion ubicacion, NivelGravedad nivelGravedad, int tiempoRespuesta) {
         this.tipo = tipo;
         this.ubicacion = ubicacion;
         this.nivelGravedad = nivelGravedad;
@@ -28,11 +29,11 @@ public class Emergencia {
         this.tipo = tipo;
     }
 
-    public String getUbicacion() {
+    public Ubicacion getUbicacion() {
         return ubicacion;
     }
 
-    public void setUbicacion(String ubicacion) {
+    public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
     }
 

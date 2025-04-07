@@ -11,17 +11,20 @@ import model.services.Bomberos;
 import model.services.Policia;
 import utils.NivelGravedad;
 import utils.TipoEmergencia;
+import utils.Ubicacion;
 
 public class Main {
 
     public static void main(String[] args) {
-        
+        // Singleton instance of the emergency system
         SistemaEmergencias sistema = SistemaEmergencias.getInstance();
 
+        // Initialize demo resources
         inicializarRecursosDemo(sistema);
         Scanner sc = new Scanner(System.in);
         boolean salir = false;
 
+        // Main menu loop
         while (!salir) {
             System.out.println("\n=== SISTEMA DE GESTIÓN DE EMERGENCIAS ===");
             System.out.println("1. Registrar una nueva emergencia");
@@ -39,6 +42,7 @@ public class Main {
                 continue;
             }
 
+            // Handle menu options
             switch (opcion) {
                 case 1:
                     registrarEmergenciaMenu(sistema, sc);
@@ -64,6 +68,7 @@ public class Main {
         sc.close();
     }
 
+    // Initialize demo resources for testing
     private static void inicializarRecursosDemo(SistemaEmergencias sistema) {
         sistema.registrarRecurso(new Bomberos("Unidad-B1", 5, 100));
         sistema.registrarRecurso(new Bomberos("Unidad-B2", 3, 80));
@@ -73,6 +78,7 @@ public class Main {
         sistema.registrarRecurso(new Policia("Unidad-P2", 2, 70));
     }
     
+    // Menu for registering a new emergency
     private static void registrarEmergenciaMenu(SistemaEmergencias sistema, Scanner sc) {
         System.out.println("\n=== REGISTRAR NUEVA EMERGENCIA ===");
         System.out.println("1. Incendio");
@@ -90,14 +96,37 @@ public class Main {
             case 3:
                 tipo = TipoEmergencia.ROBO;
                 break;
+            default:
+                System.out.println("Tipo de emergencia inválido.");
+                return;
         }
 
-        System.out
-                .print("Ingrese ubicación (ejemplo: Norte,Sur, Centro, este, oeste): ");
-        String ubicacion = sc.nextLine();
+        // Select location
+        System.out.print("Ingrese ubicación (1. Norte - 2.Sur - 3.Centro - 4. Este - 5. Oeste): ");
+        Ubicacion ubicacion = null;
+        switch (Integer.parseInt(sc.nextLine())) {
+            case 1:
+                ubicacion = Ubicacion.NORTE;
+                break;
+            case 2:
+                ubicacion = Ubicacion.SUR;
+                break;
+            case 3:
+                ubicacion = Ubicacion.CENTRO;
+                break;
+            case 4:
+                ubicacion = Ubicacion.ESTE;
+                break;
+            case 5:
+                ubicacion = Ubicacion.OESTE;
+                break;
+            default:
+                System.out.println("Ubicación inválida.");
+                return;
+        }
 
+        // Select severity level
         System.out.print("Ingrese nivel de gravedad (1. bajo, 2. medio, 3. alto): ");
-
         NivelGravedad nivelGravedad = null;
         switch (Integer.parseInt(sc.nextLine())) {
             case 1:
@@ -110,13 +139,14 @@ public class Main {
                 nivelGravedad = NivelGravedad.ALTO;
                 break;
             default:
-                nivelGravedad = NivelGravedad.BAJO;
-                break;
+                return;
         }
 
+        // Input estimated response time
         System.out.print("Ingrese tiempo estimado de atención (minutos): ");
         int tiempoEstimado = Integer.parseInt(sc.nextLine());
 
+        // Create and register the emergency
         Emergencia nueva = FactoryEmergencias.crearEmergencia(tipo, ubicacion, nivelGravedad, tiempoEstimado);
         if (nueva == null) {
             System.out.println("Tipo de emergencia inválido.");
@@ -127,6 +157,7 @@ public class Main {
         System.out.println("Emergencia registrada: " + nueva);
     }
 
+    // Menu for attending an emergency
     private static void atenderEmergenciaMenu(SistemaEmergencias sistema, Scanner sc) {
         List<Emergencia> pendientes = sistema.getEmergenciasPendientes();
         if (pendientes.isEmpty()) {
@@ -145,6 +176,7 @@ public class Main {
             return;
         }
 
+        // Assign resources and attend the selected emergency
         Emergencia emergencia = pendientes.get(indice);
         sistema.asignarRecursosAEmergencia(emergencia);
         sistema.atenderEmergencia(emergencia);

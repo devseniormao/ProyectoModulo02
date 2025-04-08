@@ -4,9 +4,9 @@ import model.factoryEmerencias.Emergencia;
 
 public class Bomberos extends ServicioEmergenciaBase {
 
-    public Bomberos(String id, int personalDisponible, double combustible, boolean atendiendoEmergencia) {
-        super(id, personalDisponible, combustible, atendiendoEmergencia);
-        //TODO Auto-generated constructor stub
+    public Bomberos(String id, int personalDisponible, double combustible) {
+        super(id, personalDisponible, combustible);
+        
     }
 
     @Override

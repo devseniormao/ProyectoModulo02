@@ -12,13 +12,15 @@ public class Emergencia {
     private boolean atendida;
     private long tiempoInicioAtencion;
     private long tiempoFinalAtencion;
+    private String prioridad;
     
-    public Emergencia(TipoEmergencia tipo, Ubicacion ubicacion, NivelGravedad nivelGravedad, int tiempoRespuesta) {
+    public Emergencia(TipoEmergencia tipo, Ubicacion ubicacion, NivelGravedad nivelGravedad, int tiempoRespuesta, String prioridad) {
         this.tipo = tipo;
         this.ubicacion = ubicacion;
         this.nivelGravedad = nivelGravedad;
         this.tiempoRespuesta = tiempoRespuesta;
         this.atendida = false;
+        this.prioridad = prioridad;
     }
 
     public TipoEmergencia getTipo() {
@@ -94,7 +96,7 @@ public class Emergencia {
     public String toString() {
         return "Emergencia [tipo=" + tipo + ", ubicacion=" + ubicacion + ", nivelGravedad=" + nivelGravedad
                 + ", tiempoRespuesta=" + tiempoRespuesta + ", atendida=" + atendida + ", tiempoInicioAtencion="
-                + tiempoInicioAtencion + ", tiempoFinalAtencion=" + tiempoFinalAtencion + "]";
+                + tiempoInicioAtencion + ", tiempoFinalAtencion=" + tiempoFinalAtencion + ", Prioridad=" + prioridad + "]";
     }
 
 }

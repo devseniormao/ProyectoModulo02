@@ -14,7 +14,9 @@ import model.observer.SujetoEmergencias;
 import model.services.Ambulancia;
 import model.services.Bomberos;
 import model.services.Policia;
+import model.strategy.CalcularPrioridad;
 import model.strategy.IPrioridad;
+import model.strategy.StrategyPrioridadCercania;
 import model.strategy.StrategyPrioridadGravedad;
 
 public class SistemaEmergencias implements SujetoEmergencias{
@@ -22,7 +24,7 @@ public class SistemaEmergencias implements SujetoEmergencias{
     private static SistemaEmergencias instance;
     private List<Emergencia> listaEmergencias;
     private List<IServicioEmergencia> listaRecursos;
-    private List<ObserverEmergencias> observadores;    
+    private List<ObserverEmergencias> observadores;
 
     private IPrioridad strategyPrioridad;
 
@@ -176,5 +178,17 @@ public class SistemaEmergencias implements SujetoEmergencias{
     public void setEstrategiaPrioridad(IPrioridad nuevaEstrategia) {
         strategyPrioridad = nuevaEstrategia;
     }
+    
+    //implementación del patrón strategy
+    public double prioridad(Emergencia emergencia) {
+        //instancia la clase calcular prioridad que a su vez construye un objeto con la instancia de los objetos que implementan
+        // la interface IPrioridad
+        CalcularPrioridad distancia = new CalcularPrioridad(new StrategyPrioridadCercania());
+        CalcularPrioridad gravedad = new CalcularPrioridad(new StrategyPrioridadGravedad());
 
+        // Realiza divisiones de punto flotante
+        double prioridad = ((gravedad.calcularPrioridad(emergencia) / 3.0) * 70)
+                         + ((distancia.calcularPrioridad(emergencia) / 10.0) * 30);
+        return prioridad;
+    }
 }

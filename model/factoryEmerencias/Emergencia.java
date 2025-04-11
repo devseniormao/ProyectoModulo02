@@ -1,8 +1,8 @@
 package model.factoryEmerencias;
 
+import utils.NivelGravedad;
 import utils.TipoEmergencia;
 import utils.Ubicacion;
-import utils.NivelGravedad;
 
 public class Emergencia {
     private TipoEmergencia tipo;

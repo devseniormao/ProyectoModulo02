@@ -1,9 +1,12 @@
 package controller;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import model.factoryEmerencias.AccidenteVehicular;
 import model.factoryEmerencias.Emergencia;
 import model.factoryEmerencias.Incendio;
@@ -22,7 +25,8 @@ public class SistemaEmergencias implements SujetoEmergencias{
     private static SistemaEmergencias instance;
     private List<Emergencia> listaEmergencias;
     private List<IServicioEmergencia> listaRecursos;
-    private List<ObserverEmergencias> observadores;    
+    private List<ObserverEmergencias> observadores; 
+    private List<Emergencia> emergenciasEnCurso;   
 
     private IPrioridad strategyPrioridad;
 
@@ -88,6 +92,12 @@ public class SistemaEmergencias implements SujetoEmergencias{
     public List<Emergencia> getEmergenciasPendientes() {
         return listaEmergencias.stream()
                 .filter(e -> !e.isAtendida())
+                .collect(Collectors.toList());
+    }
+
+    public List<Emergencia> getEmergenciasEnCurso() {
+        return listaEmergencias.stream()
+                .filter(e -> e.isAtendida())
                 .collect(Collectors.toList());
     }
 
@@ -165,6 +175,35 @@ public class SistemaEmergencias implements SujetoEmergencias{
                 .count();
         System.out.println("Emergencias no atendidas: " + noAtendidas);
     }
+
+    public void verificarEmergenciasPendientes() {
+        List<Emergencia> pendientes = getEmergenciasPendientes();
+        List<Emergencia> enCurso = getEmergenciasEnCurso();
+        LocalDateTime ahora = LocalDateTime.now();
+
+        //revisar emergencias pendientes
+        for (Emergencia e : pendientes) {
+            System.out.println("ALARMA: Emergencia pendiente de atencion -> " + e);
+        }
+
+        //revisar las emergencias en curso y compararlas con el tiempo estimado
+        for (Emergencia e : enCurso) {
+            System.out.println("ALARMA: Emergencia en curso -> " + e);
+            if (e.getTiempoInicioAtencion() > 0) {
+                Instant tiempoInicioInstant = Instant.ofEpochMilli(e.getTiempoInicioAtencion());
+                Instant ahoraInstant = ahora.atZone(ZoneId.systemDefault()).toInstant();
+
+                Duration duracion = Duration.between(tiempoInicioInstant, ahoraInstant);
+                long minutosTranscurridos = duracion.toMinutes();
+                if (minutosTranscurridos > e.getTiempoRespuesta()) {
+                    System.out.println("ALARMA: Emergencia en curso ha excedido el tiempo estimado de atención.");
+                }
+            } else {
+                System.out.println("ALARMA: Emergencia en curso no tiene tiempo de inicio registrado.");
+                }
+            }
+            
+        }
 
     public void finalizarJornada() {
         mostrarEstadisticas();

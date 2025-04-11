@@ -6,8 +6,8 @@ import utils.Ubicacion;
 
 public class AccidenteVehicular extends Emergencia{
 
-    public AccidenteVehicular(TipoEmergencia tipo, Ubicacion ubicacion, NivelGravedad nivelGravedad, int tiempoRespuesta) {
-        super(tipo, ubicacion, nivelGravedad, tiempoRespuesta);
+    public AccidenteVehicular(TipoEmergencia tipo, Ubicacion ubicacion, NivelGravedad nivelGravedad, int tiempoRespuesta, String prioridad) {
+        super(tipo, ubicacion, nivelGravedad, tiempoRespuesta, prioridad);
         //TODO Auto-generated constructor stub
     }
 

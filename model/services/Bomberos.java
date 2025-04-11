@@ -6,7 +6,7 @@ public class Bomberos extends ServicioEmergenciaBase {
 
     public Bomberos(String id, int personalDisponible, double combustible) {
         super(id, personalDisponible, combustible);
-        
+
     }
 
     @Override

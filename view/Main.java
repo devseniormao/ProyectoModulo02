@@ -8,6 +8,7 @@ import model.factoryEmerencias.FactoryEmergencias;
 import model.services.Ambulancia;
 import model.services.Bomberos;
 import model.services.Policia;
+import model.strategy.IPrioridad;
 import utils.NivelGravedad;
 import utils.TipoEmergencia;
 import utils.Ubicacion;
@@ -138,6 +139,7 @@ public class Main {
                 nivelGravedad = NivelGravedad.ALTO;
                 break;
             default:
+            System.out.println("Nivel de gravedad inválido.");
                 return;
         }
 
@@ -145,17 +147,24 @@ public class Main {
         System.out.print("Ingrese tiempo estimado de atención (minutos): ");
         int tiempoEstimado = Integer.parseInt(sc.nextLine());
 
+        // Create a temporary emergency to calculate priority
+        Emergencia tempEmergencia = new Emergencia(tipo, ubicacion, nivelGravedad, tiempoEstimado, "");
+        double prioridadCalculada = sistema.prioridad(tempEmergencia);
+
+        // Convert priority to a string
+        String prioridad = String.format("%.1f", prioridadCalculada)+"%";
+
         // Create and register the emergency
-        Emergencia nueva = FactoryEmergencias.crearEmergencia(tipo, ubicacion, nivelGravedad, tiempoEstimado);
+        Emergencia nueva = FactoryEmergencias.crearEmergencia(tipo, ubicacion, nivelGravedad, tiempoEstimado, prioridad);
         if (nueva == null) {
             System.out.println("Tipo de emergencia inválido.");
             return;
         }
-
+        
         sistema.registrarNuevaEmergencia(nueva);
         System.out.println("Emergencia registrada: " + nueva);
     }
-
+    
     // Menu for attending an emergency
     private static void atenderEmergenciaMenu(SistemaEmergencias sistema, Scanner sc) {
         List<Emergencia> pendientes = sistema.getEmergenciasPendientes();

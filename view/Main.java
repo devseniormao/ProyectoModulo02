@@ -8,7 +8,6 @@ import model.factoryEmerencias.FactoryEmergencias;
 import model.services.Ambulancia;
 import model.services.Bomberos;
 import model.services.Policia;
-import model.strategy.IPrioridad;
 import utils.NivelGravedad;
 import utils.TipoEmergencia;
 import utils.Ubicacion;
@@ -28,13 +27,10 @@ public class Main {
         while (!salir) {
             System.out.println("\n=== SISTEMA DE GESTIÓN DE EMERGENCIAS ===");
             System.out.println("1. Registrar una nueva emergencia");
-            sistema.verificarEmergenciasPendientes();
             System.out.println("2. Ver estado de recursos disponibles");
-            sistema.verificarEmergenciasPendientes();
             System.out.println("3. Atender una emergencia");
             sistema.verificarEmergenciasPendientes();
             System.out.println("4. Mostrar estadísticas del día");
-            sistema.verificarEmergenciasPendientes();
             System.out.println("5. Finalizar jornada (cerrar sistema)");
             sistema.verificarEmergenciasPendientes();
             System.out.print("Seleccione una opción: ");

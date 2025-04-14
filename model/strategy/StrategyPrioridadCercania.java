@@ -20,6 +20,7 @@ public class StrategyPrioridadCercania implements IPrioridad {
     
     private MapaUrbano mapaUrbano = new MapaUrbano();
     
+    @Override
     public int calcularPrioridad(Emergencia emergencia) {
         int calcularDistancia = mapaUrbano.calcularDistancia(emergencia.getUbicacion());
         return calcularDistancia;

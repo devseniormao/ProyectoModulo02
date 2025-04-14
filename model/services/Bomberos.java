@@ -4,8 +4,8 @@ import model.factoryEmerencias.Emergencia;
 
 public class Bomberos extends ServicioEmergenciaBase {
 
-    public Bomberos(String id, int personalDisponible, double combustible) {
-        super(id, personalDisponible, combustible);
+    public Bomberos(String id, int personalDisponible, int vehiculosDisponibles, double combustible) {
+        super(id, personalDisponible, vehiculosDisponibles, combustible);
 
     }
 
@@ -14,8 +14,9 @@ public class Bomberos extends ServicioEmergenciaBase {
         System.out.println("Bomberos atendiendo emergencia.");
         System.out.println("Bomberos: " + getId() + "\n" +  emergencia.toString());
     
-        asignarPersonal(3);
-        asignarCombustible(5.0);
+        asignarPersonal(20);
+        asignarVehiculo(4);
+        asignarCombustible(100.0);
     }
 
 }

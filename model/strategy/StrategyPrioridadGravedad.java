@@ -5,6 +5,7 @@ import model.factoryEmerencias.Emergencia;
 public class StrategyPrioridadGravedad implements IPrioridad {
 
     
+    @Override
     public int calcularPrioridad(Emergencia emergencia) {
         switch (emergencia.getNivelGravedad()) {
             case BAJO:

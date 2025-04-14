@@ -71,12 +71,25 @@ public class Main {
 
     // Initialize demo resources for testing
     private static void inicializarRecursosDemo(SistemaEmergencias sistema) {
-        sistema.registrarRecurso(new Bomberos("Unidad-B1", 5, 100));
-        sistema.registrarRecurso(new Bomberos("Unidad-B2", 3, 80));
-        sistema.registrarRecurso(new Ambulancia("Unidad-A1", 2, 100));
-        sistema.registrarRecurso(new Ambulancia("Unidad-A2", 2, 60));
-        sistema.registrarRecurso(new Policia("Unidad-P1", 4, 100));
-        sistema.registrarRecurso(new Policia("Unidad-P2", 2, 70));
+        sistema.registrarRecurso(new Bomberos("Unidad-B1", 5, 1,25));
+        sistema.registrarRecurso(new Bomberos("Unidad-B2", 5, 1,25));
+        sistema.registrarRecurso(new Bomberos("Unidad-B3", 5, 1,25));
+        sistema.registrarRecurso(new Bomberos("Unidad-B4", 5, 1,25));
+        sistema.registrarRecurso(new Ambulancia("Unidad-A1", 2, 1, 10));
+        sistema.registrarRecurso(new Ambulancia("Unidad-A2", 2, 1, 10));
+        sistema.registrarRecurso(new Ambulancia("Unidad-A3", 2, 1, 10));
+        sistema.registrarRecurso(new Ambulancia("Unidad-A4", 2, 1, 10));
+        sistema.registrarRecurso(new Ambulancia("Unidad-A5", 2, 1, 10));
+        sistema.registrarRecurso(new Policia("Unidad-P1", 2,1, 10));
+        sistema.registrarRecurso(new Policia("Unidad-P2", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P3", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P4", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P5", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P6", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P7", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P8", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P9", 2, 1,10));
+        sistema.registrarRecurso(new Policia("Unidad-P10", 2, 1,10));
     }
     
     // Menu for registering a new emergency

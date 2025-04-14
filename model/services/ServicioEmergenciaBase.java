@@ -7,22 +7,34 @@ public abstract class ServicioEmergenciaBase implements IServicioEmergencia {
 
   private String id;
   private int personalDisponible;
+  private int vehiculosDisponibles; // Atributo agregado para la cantidad de vehículos disponibles
   private double combustible;
-
-  public ServicioEmergenciaBase(String id, int personalDisponible, double combustible) {
+  
+  
+  public ServicioEmergenciaBase(String id, int personalDisponible, int vehiculosDisponibles,double combustible) {
     this.id = id;
     this.personalDisponible = personalDisponible;
+    this.vehiculosDisponibles = vehiculosDisponibles; // Inicialización del nuevo atributo
     this.combustible = combustible;
   }
 
+  @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public int getPersonalDisponible() {
     return personalDisponible;
   }
 
+  
+  @Override
+  public int getVehiculosDisponibles() {
+    return vehiculosDisponibles;
+  }
+
+  @Override
   public double getCombustible() {
     return combustible;
   }
@@ -47,6 +59,20 @@ public abstract class ServicioEmergenciaBase implements IServicioEmergencia {
   }
 
   @Override
+  public void asignarVehiculo(int cantidad) {
+    if(cantidad <= vehiculosDisponibles ) {
+        vehiculosDisponibles -= cantidad;
+    }else {
+        System.out.println("No hay vehículos disponibles.");
+    }
+  }
+
+  @Override
+  public void liberarVehiculo(int cantidad){
+    vehiculosDisponibles += cantidad;
+  }
+
+  @Override
   public void asignarCombustible(double cantidad) {
     combustible = Math.max(0, combustible - cantidad);
   }
@@ -56,6 +82,7 @@ public abstract class ServicioEmergenciaBase implements IServicioEmergencia {
     combustible += cantidad;
   }
 
+  @Override
   public abstract void atenderEmergencia(Emergencia emergencia);
 
   @Override
@@ -63,7 +90,5 @@ public abstract class ServicioEmergenciaBase implements IServicioEmergencia {
     return "ServicioEmergenciaBase [id=" + id + ", personalDisponible=" + personalDisponible + ", combustible="
             + combustible + "]";
   }
-
-  
 
 }

@@ -7,6 +7,8 @@ public interface IServicioEmergencia {
     String getId();
     
     int getPersonalDisponible();
+
+    int getVehiculosDisponibles(); // Método agregado para obtener la cantidad de vehículos disponibles
     
     double getCombustible();
 
@@ -15,6 +17,10 @@ public interface IServicioEmergencia {
     void asignarPersonal(int cantidad);
 
     void liberarPersonal(int cantidad);
+
+    void asignarVehiculo(int cantidad); // Método agregado para asignar vehículos
+
+    void liberarVehiculo(int cantidad); // Método agregado para liberar vehículos
 
     void asignarCombustible(double cantidad);
 

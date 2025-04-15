@@ -29,7 +29,6 @@ public class Main {
             System.out.println("1. Registrar una nueva emergencia");
             System.out.println("2. Ver estado de recursos disponibles");
             System.out.println("3. Atender una emergencia");
-            sistema.verificarEmergenciasPendientes();
             System.out.println("4. Mostrar estadísticas del día");
             System.out.println("5. Finalizar jornada (cerrar sistema)");
             sistema.verificarEmergenciasPendientes();

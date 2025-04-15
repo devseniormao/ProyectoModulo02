@@ -140,19 +140,24 @@ public class SistemaEmergencias implements SujetoEmergencias{
     }
 
     public void atenderEmergencia(Emergencia e) {
-        if (e.isAtendida()) {
-            System.out.println("Esta emergencia ya fue atendida.");
-            return;
-        }
 
         e.iniciarAtencion();
+        System.out.println("Atendiendo emergencia: " + e.toString());
 
-        // Simulate response time
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
+        int totalTiempo = 1000; // tiempo total de atenciónencion de la emergencia simulado
+        int pasos = 10; // número de pasos para simular la atenciónencion de la emergencia
+        int tiempoPorPaso = totalTiempo / pasos; // tiempo por paso de atenciónencion de la emergencia
+
+        for (int i = 1; i <= pasos; i++) {
+            try {
+                Thread.sleep(tiempoPorPaso);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            int porcentage = (i * 100) / pasos; // porcentaje de atenciónencion de la emergencia
+            System.out.println("Avance Atención de emergencia: " + porcentage + "% completado.");
         }
+
 
         e.finalizarAtencion();
         System.out.println("Emergencia atendida: " + e.toString());
@@ -160,6 +165,45 @@ public class SistemaEmergencias implements SujetoEmergencias{
         emergenciasAtendidas++;
         tiempoTotalAtencion += e.getTiempoRespuesta();
     }
+
+
+    public void reasignarRecursosAEmergencia(Emergencia emergencia) {
+        // Filtrar recursos disponibles
+        List<IServicioEmergencia> disponibles = filtrarRecursosDisponibles();
+        if (disponibles.isEmpty()) {
+            System.out.println("No hay recursos disponibles para reasignar.");
+            return;
+        }
+
+        System.out.println("-> Reasignando recursos automáticamente...");
+
+          // Reasignar recursos según el tipo de emergencia
+    if (emergencia instanceof Incendio) {
+        for (IServicioEmergencia r : disponibles) {
+            if (r instanceof Bomberos) {
+                r.atenderEmergencia(emergencia);
+                System.out.println("Recurso reasignado: " + r.getId());
+                break;
+            }
+        }
+    } else if (emergencia instanceof AccidenteVehicular) {
+        for (IServicioEmergencia r : disponibles) {
+            if (r instanceof Ambulancia) {
+                r.atenderEmergencia(emergencia);
+                System.out.println("Recurso reasignado: " + r.getId());
+                break;
+            }
+        }
+    } else if (emergencia instanceof Robo) {
+        for (IServicioEmergencia r : disponibles) {
+            if (r instanceof Policia) {
+                r.atenderEmergencia(emergencia);
+                System.out.println("Recurso reasignado: " + r.getId());
+                break;
+            }
+        }
+    }
+}
     
     public void mostrarEstadisticas() {
         System.out.println("\n=== ESTADÍSTICAS DEL DÍA ===");
@@ -190,6 +234,10 @@ public class SistemaEmergencias implements SujetoEmergencias{
 
         //revisar las emergencias en curso y compararlas con el tiempo estimado
         for (Emergencia e : enCurso) {
+            if (e.isAtendida()) {
+                continue; // Si ya fue atendida, no la revisamos y no se genera la alarma
+            }
+
             System.out.println("ALARMA: Emergencia en curso -> " + e);
             if (e.getTiempoInicioAtencion() > 0) {
                 Instant tiempoInicioInstant = Instant.ofEpochMilli(e.getTiempoInicioAtencion());

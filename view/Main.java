@@ -29,9 +29,9 @@ public class Main {
             System.out.println("1. Registrar una nueva emergencia");
             System.out.println("2. Ver estado de recursos disponibles");
             System.out.println("3. Atender una emergencia");
-            sistema.verificarEmergenciasPendientes();
-            System.out.println("4. Mostrar estadísticas del día");
-            System.out.println("5. Finalizar jornada (cerrar sistema)");
+            System.out.println("4. Reasignar recursos a una emergencia");
+            System.out.println("5. Mostrar estadísticas del día");
+            System.out.println("6. Finalizar jornada (cerrar sistema)");
             sistema.verificarEmergenciasPendientes();
             System.out.print("Seleccione una opción: ");
 
@@ -55,9 +55,12 @@ public class Main {
                     atenderEmergenciaMenu(sistema, sc);
                     break;
                 case 4:
-                    sistema.mostrarEstadisticas();
+                    reasignarRecursosMenu(sistema, sc);
                     break;
                 case 5:
+                    sistema.mostrarEstadisticas();
+                    break;
+                case 6:
                     System.out.println("Finalizando jornada...");
                     sistema.finalizarJornada();
                     salir = true;
@@ -190,5 +193,28 @@ public class Main {
         sistema.asignarRecursosAEmergencia(emergencia);
         sistema.atenderEmergencia(emergencia);
     }
+
+    // Método para el menú de reasignación
+private static void reasignarRecursosMenu(SistemaEmergencias sistema, Scanner sc) {
+    List<Emergencia> enCurso = sistema.getEmergenciasEnCurso();
+    if (enCurso.isEmpty()) {
+        System.out.println("No hay emergencias en curso para reasignar recursos.");
+        return;
+    }
+
+    System.out.println("\n=== REASIGNAR RECURSOS ===");
+    for (int i = 0; i < enCurso.size(); i++) {
+        System.out.println((i + 1) + ". " + enCurso.get(i).toString());
+    }
+    System.out.print("Seleccione el número de la emergencia para reasignar recursos: ");
+    int indice = Integer.parseInt(sc.nextLine()) - 1;
+    if (indice < 0 || indice >= enCurso.size()) {
+        System.out.println("Índice inválido.");
+        return;
+    }
+
+    Emergencia emergencia = enCurso.get(indice);
+    sistema.reasignarRecursosAEmergencia(emergencia);
+}
 
 }

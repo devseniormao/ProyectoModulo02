@@ -4,9 +4,9 @@ import model.factoryEmerencias.Emergencia;
 
 public class Policia extends ServicioEmergenciaBase{
 
-    public Policia(String id, int personalDisponible, double combustible) {
-        super(id, personalDisponible, combustible);
-        //TODO Auto-generated constructor stub
+    public Policia(String id, int personalDisponible, int vehiculosDisponibles, double combustible) {
+        super(id, personalDisponible, vehiculosDisponibles, combustible);
+        
     }
 
     @Override
@@ -14,8 +14,9 @@ public class Policia extends ServicioEmergenciaBase{
         System.out.println("Policia atendiendo emergencia.");
         System.out.println("Policia: " + getId() + "\n" + emergencia.toString());
         
-        asignarPersonal(3);
-        asignarCombustible(5.0);
+        asignarPersonal(20);
+        asignarVehiculo(10);
+        asignarCombustible(100.0);
     }
     
 

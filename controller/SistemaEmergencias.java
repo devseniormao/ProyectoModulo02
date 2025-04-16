@@ -63,8 +63,12 @@ public class SistemaEmergencias implements SujetoEmergencias{
 
     @Override
     public void notificarEmergencias(Emergencia emergencia) {
-        for(ObserverEmergencias observerEmergencias : observadores) {
-            observerEmergencias.onNuevasEmergencias(emergencia);
+        for (ObserverEmergencias observer : observadores) {
+            if (emergencia.isAtendida()) {
+                observer.onEmergenciaAtendida(emergencia);
+            } else {
+                observer.onEmergenciaNoAtendida(emergencia);
+            }
         }
     }
 
@@ -227,16 +231,42 @@ public class SistemaEmergencias implements SujetoEmergencias{
         strategyPrioridad = nuevaEstrategia;
     }
     
-    //implementación del patrón strategy
+    // Implementación del patrón strategy
     public double prioridad(Emergencia emergencia) {
-        //instancia la clase calcular prioridad que a su vez construye un objeto con la instancia de los objetos que implementan
-        // la interface IPrioridad
+        // Instancia la clase CalcularPrioridad con diferentes estrategias
         CalcularPrioridad distancia = new CalcularPrioridad(new StrategyPrioridadCercania());
         CalcularPrioridad gravedad = new CalcularPrioridad(new StrategyPrioridadGravedad());
 
-        // Realiza divisiones de punto flotante
+        // Realiza divisiones de punto flotante para calcular la prioridad
         double prioridad = ((gravedad.calcularPrioridad(emergencia) / 3.0) * 70)
                          + ((distancia.calcularPrioridad(emergencia) / 10.0) * 30);
         return prioridad;
+    }
+
+    public void mostrarEmergenciasPorAgencia(String agencia) {
+        System.out.println("\n=== EMERGENCIAS PARA " + agencia.toUpperCase() + " ===");
+        List<Emergencia> atendidas = listaEmergencias.stream()
+                .filter(e -> e.isAtendida() && obtenerTipoRecurso(e).equalsIgnoreCase(agencia))
+                .collect(Collectors.toList());
+        List<Emergencia> noAtendidas = listaEmergencias.stream()
+                .filter(e -> !e.isAtendida() && obtenerTipoRecurso(e).equalsIgnoreCase(agencia))
+                .collect(Collectors.toList());
+
+        System.out.println("Emergencias atendidas:");
+        atendidas.forEach(e -> System.out.println(e.toString()));
+
+        System.out.println("\nEmergencias no atendidas:");
+        noAtendidas.forEach(e -> System.out.println(e.toString()));
+    }
+
+    private String obtenerTipoRecurso(Emergencia emergencia) {
+        if (emergencia instanceof AccidenteVehicular) {
+            return "Ambulancia";
+        } else if (emergencia instanceof Robo) {
+            return "Policía";
+        } else if (emergencia instanceof Incendio) {
+            return "Bomberos";
+        }
+        return "Desconocido";
     }
 }

@@ -31,7 +31,10 @@ public class Main {
             System.out.println("3. Atender una emergencia");
             System.out.println("4. Mostrar estadísticas del día");
             System.out.println("5. Finalizar jornada (cerrar sistema)");
+            System.out.println("6. Agencias");
+          
             sistema.verificarEmergenciasPendientes();
+          
             System.out.print("Seleccione una opción: ");
 
             int opcion = 0;
@@ -60,6 +63,9 @@ public class Main {
                     System.out.println("Finalizando jornada...");
                     sistema.finalizarJornada();
                     salir = true;
+                    break;
+                case 6:
+                    mostrarSubmenuAgencias(sistema, sc);
                     break;
                 default:
                     System.out.println("Opción inválida. Intente de nuevo.");
@@ -195,6 +201,7 @@ public class Main {
         if (indice < 0 || indice >= pendientes.size()) {
             System.out.println("Índice inválido.");
             return;
+            
         }
 
         // Assign resources and attend the selected emergency
@@ -203,4 +210,27 @@ public class Main {
         sistema.atenderEmergencia(emergencia);
     }
 
+    // Submenu for agencies
+    private static void mostrarSubmenuAgencias(SistemaEmergencias sistema, Scanner sc) {
+        System.out.println("\n=== AGENCIAS ===");
+        System.out.println("1. Ambulancia");
+        System.out.println("2. Policía");
+        System.out.println("3. Bomberos");
+        System.out.print("Seleccione una opción: ");
+
+        int opcion = Integer.parseInt(sc.nextLine());
+        switch (opcion) {
+            case 1:
+                sistema.mostrarEmergenciasPorAgencia("Ambulancia");
+                break;
+            case 2:
+                sistema.mostrarEmergenciasPorAgencia("Policía");
+                break;
+            case 3:
+                sistema.mostrarEmergenciasPorAgencia("Bomberos");
+                break;
+            default:
+                System.out.println("Opción inválida.");
+        }
+    }
 }

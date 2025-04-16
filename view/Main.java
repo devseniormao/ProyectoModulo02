@@ -1,5 +1,6 @@
 package view;
 
+// Importaciones necesarias
 import controller.SistemaEmergencias;
 import java.util.List;
 import java.util.Scanner;
@@ -15,15 +16,15 @@ import utils.Ubicacion;
 public class Main {
 
     public static void main(String[] args) {
-        // Singleton instance of the emergency system
+        // Singleton para obtener la instancia del sistema de emergencias
         SistemaEmergencias sistema = SistemaEmergencias.getInstance();
 
-        // Initialize demo resources
+        // Inicializar recursos de demostración
         inicializarRecursosDemo(sistema);
         Scanner sc = new Scanner(System.in);
         boolean salir = false;
 
-        // Main menu loop
+        // Bucle principal del menú
         while (!salir) {
             System.out.println("\n=== SISTEMA DE GESTIÓN DE EMERGENCIAS ===");
             System.out.println("1. Registrar una nueva emergencia");
@@ -33,19 +34,21 @@ public class Main {
             System.out.println("5. Finalizar jornada (cerrar sistema)");
             System.out.println("6. Agencias");
           
+            // Verificar si hay emergencias pendientes
             sistema.verificarEmergenciasPendientes();
           
             System.out.print("Seleccione una opción: ");
 
             int opcion = 0;
             try {
+                // Leer la opción seleccionada por el usuario
                 opcion = Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Opción inválida. Intente de nuevo.");
                 continue;
             }
 
-            // Handle menu options
+            // Manejar las opciones del menú
             switch (opcion) {
                 case 1:
                     registrarEmergenciaMenu(sistema, sc);
@@ -74,17 +77,20 @@ public class Main {
         sc.close();
     }
 
-    // Initialize demo resources for testing
+    // Método para inicializar recursos de demostración
     private static void inicializarRecursosDemo(SistemaEmergencias sistema) {
+        // Registrar recursos de bomberos
         sistema.registrarRecurso(new Bomberos("Unidad-B1", 5, 1,25));
         sistema.registrarRecurso(new Bomberos("Unidad-B2", 5, 1,25));
         sistema.registrarRecurso(new Bomberos("Unidad-B3", 5, 1,25));
         sistema.registrarRecurso(new Bomberos("Unidad-B4", 5, 1,25));
+        // Registrar recursos de ambulancias
         sistema.registrarRecurso(new Ambulancia("Unidad-A1", 2, 1, 10));
         sistema.registrarRecurso(new Ambulancia("Unidad-A2", 2, 1, 10));
         sistema.registrarRecurso(new Ambulancia("Unidad-A3", 2, 1, 10));
         sistema.registrarRecurso(new Ambulancia("Unidad-A4", 2, 1, 10));
         sistema.registrarRecurso(new Ambulancia("Unidad-A5", 2, 1, 10));
+        // Registrar recursos de policía
         sistema.registrarRecurso(new Policia("Unidad-P1", 2,1, 10));
         sistema.registrarRecurso(new Policia("Unidad-P2", 2, 1,10));
         sistema.registrarRecurso(new Policia("Unidad-P3", 2, 1,10));
@@ -97,7 +103,7 @@ public class Main {
         sistema.registrarRecurso(new Policia("Unidad-P10", 2, 1,10));
     }
     
-    // Menu for registering a new emergency
+    // Menú para registrar una nueva emergencia
     private static void registrarEmergenciaMenu(SistemaEmergencias sistema, Scanner sc) {
         System.out.println("\n=== REGISTRAR NUEVA EMERGENCIA ===");
         System.out.println("1. Incendio");
@@ -120,7 +126,7 @@ public class Main {
                 return;
         }
 
-        // Select location
+        // Seleccionar ubicación
         System.out.print("Ingrese ubicación (1. Norte - 2.Sur - 3.Centro - 4. Este - 5. Oeste): ");
         Ubicacion ubicacion = null;
         switch (Integer.parseInt(sc.nextLine())) {
@@ -144,7 +150,7 @@ public class Main {
                 return;
         }
 
-        // Select severity level
+        // Seleccionar nivel de gravedad
         System.out.print("Ingrese nivel de gravedad (1. bajo, 2. medio, 3. alto): ");
         NivelGravedad nivelGravedad = null;
         switch (Integer.parseInt(sc.nextLine())) {
@@ -162,18 +168,18 @@ public class Main {
                 return;
         }
 
-        // Input estimated response time
+        // Ingresar tiempo estimado de atención
         System.out.print("Ingrese tiempo estimado de atención (minutos): ");
         int tiempoEstimado = Integer.parseInt(sc.nextLine());
 
-        // Create a temporary emergency to calculate priority
+        // Crear una emergencia temporal para calcular la prioridad
         Emergencia tempEmergencia = new Emergencia(tipo, ubicacion, nivelGravedad, tiempoEstimado, "");
         double prioridadCalculada = sistema.prioridad(tempEmergencia);
 
-        // Convert priority to a string
+        // Convertir la prioridad a un formato de cadena
         String prioridad = String.format("%.1f", prioridadCalculada)+"%";
 
-        // Create and register the emergency
+        // Crear y registrar la emergencia
         Emergencia nueva = FactoryEmergencias.crearEmergencia(tipo, ubicacion, nivelGravedad, tiempoEstimado, prioridad);
         if (nueva == null) {
             System.out.println("Tipo de emergencia inválido.");
@@ -184,7 +190,7 @@ public class Main {
         System.out.println("Emergencia registrada: " + nueva);
     }
     
-    // Menu for attending an emergency
+    // Menú para atender una emergencia
     private static void atenderEmergenciaMenu(SistemaEmergencias sistema, Scanner sc) {
         List<Emergencia> pendientes = sistema.getEmergenciasPendientes();
         if (pendientes.isEmpty()) {
@@ -204,13 +210,13 @@ public class Main {
             
         }
 
-        // Assign resources and attend the selected emergency
+        // Asignar recursos y atender la emergencia seleccionada
         Emergencia emergencia = pendientes.get(indice);
         sistema.asignarRecursosAEmergencia(emergencia);
         sistema.atenderEmergencia(emergencia);
     }
 
-    // Submenu for agencies
+    // Submenú para mostrar emergencias por agencia
     private static void mostrarSubmenuAgencias(SistemaEmergencias sistema, Scanner sc) {
         System.out.println("\n=== AGENCIAS ===");
         System.out.println("1. Ambulancia");

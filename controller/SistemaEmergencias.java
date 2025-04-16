@@ -144,7 +144,7 @@ public class SistemaEmergencias implements SujetoEmergencias{
         e.iniciarAtencion();
         System.out.println("Atendiendo emergencia: " + e.toString());
 
-        int totalTiempo = 1000; // tiempo total de atenciónencion de la emergencia simulado
+        int totalTiempo = 4000; // tiempo total de atenciónencion de la emergencia simulado
         int pasos = 10; // número de pasos para simular la atenciónencion de la emergencia
         int tiempoPorPaso = totalTiempo / pasos; // tiempo por paso de atenciónencion de la emergencia
 

@@ -1,9 +1,8 @@
 package view;
 
+import controller.SistemaEmergencias;
 import java.util.List;
 import java.util.Scanner;
-
-import controller.SistemaEmergencias;
 import model.factoryEmerencias.Emergencia;
 import model.factoryEmerencias.FactoryEmergencias;
 import model.services.Ambulancia;

@@ -1,7 +1,8 @@
 package utils;
 
+// Enumeración que define los niveles de gravedad de una emergencia
 public enum NivelGravedad {
-    ALTO,
-    MEDIO,
-    BAJO;
+    ALTO,  // Nivel de gravedad alto
+    MEDIO, // Nivel de gravedad medio
+    BAJO;  // Nivel de gravedad bajo
 }

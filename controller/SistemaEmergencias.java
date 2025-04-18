@@ -177,6 +177,46 @@ public class SistemaEmergencias implements SujetoEmergencias {
         tiempoTotalAtencion += e.getTiempoRespuesta();
     }
 
+
+    public void reasignarRecursosAEmergencia(Emergencia emergencia) {
+        // Filtrar recursos disponibles
+        List<IServicioEmergencia> disponibles = filtrarRecursosDisponibles();
+        if (disponibles.isEmpty()) {
+            System.out.println("No hay recursos disponibles para reasignar.");
+            return;
+        }
+
+        System.out.println("-> Reasignando recursos automáticamente...");
+
+          // Reasignar recursos según el tipo de emergencia
+    if (emergencia instanceof Incendio) {
+        for (IServicioEmergencia r : disponibles) {
+            if (r instanceof Bomberos) {
+                r.atenderEmergencia(emergencia);
+                System.out.println("Recurso reasignado: " + r.getId());
+                break;
+            }
+        }
+    } else if (emergencia instanceof AccidenteVehicular) {
+        for (IServicioEmergencia r : disponibles) {
+            if (r instanceof Ambulancia) {
+                r.atenderEmergencia(emergencia);
+                System.out.println("Recurso reasignado: " + r.getId());
+                break;
+            }
+        }
+    } else if (emergencia instanceof Robo) {
+        for (IServicioEmergencia r : disponibles) {
+            if (r instanceof Policia) {
+                r.atenderEmergencia(emergencia);
+                System.out.println("Recurso reasignado: " + r.getId());
+                break;
+            }
+        }
+    }
+}
+    
+
     // Muestra estadísticas del día
     public void mostrarEstadisticas() {
         System.out.println("\n=== ESTADÍSTICAS DEL DÍA ===");

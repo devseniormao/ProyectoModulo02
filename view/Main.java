@@ -30,8 +30,9 @@ public class Main {
             System.out.println("1. Registrar una nueva emergencia");
             System.out.println("2. Ver estado de recursos disponibles");
             System.out.println("3. Atender una emergencia");
-            System.out.println("4. Mostrar estadísticas del día");
-            System.out.println("5. Finalizar jornada (cerrar sistema)");
+            System.out.println("4. Reasignar recursos a una emergencia");
+            System.out.println("5. Mostrar estadísticas del día");
+            System.out.println("6. Finalizar jornada (cerrar sistema)");
             System.out.println("6. Agencias");
           
             // Verificar si hay emergencias pendientes
@@ -60,9 +61,12 @@ public class Main {
                     atenderEmergenciaMenu(sistema, sc);
                     break;
                 case 4:
-                    sistema.mostrarEstadisticas();
+                    reasignarRecursosMenu(sistema, sc);
                     break;
                 case 5:
+                    sistema.mostrarEstadisticas();
+                    break;
+                case 6:
                     System.out.println("Finalizando jornada...");
                     sistema.finalizarJornada();
                     salir = true;

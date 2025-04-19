@@ -18,6 +18,7 @@ public class Main {
     public static void main(String[] args) {
         // Singleton para obtener la instancia del sistema de emergencias
         SistemaEmergencias sistema = SistemaEmergencias.getInstance();
+        SubmenuNotificaciones submenuNotificaciones = new SubmenuNotificaciones();
 
         // Inicializar recursos de demostración
         inicializarRecursosDemo(sistema);
@@ -33,6 +34,7 @@ public class Main {
             System.out.println("4. Mostrar estadísticas del día");
             System.out.println("5. Finalizar jornada (cerrar sistema)");
             System.out.println("6. Agencias");
+            System.out.println("7. Notificaciones");
           
             // Verificar si hay emergencias pendientes
             sistema.verificarEmergenciasPendientes();
@@ -69,6 +71,9 @@ public class Main {
                     break;
                 case 6:
                     mostrarSubmenuAgencias(sistema, sc);
+                    break;
+                case 7:
+                    submenuNotificaciones.mostrarSubmenuNotificaciones(sistema, sc);
                     break;
                 default:
                     System.out.println("Opción inválida. Intente de nuevo.");
@@ -239,4 +244,5 @@ public class Main {
                 System.out.println("Opción inválida.");
         }
     }
+    
 }

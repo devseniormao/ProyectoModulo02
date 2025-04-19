@@ -22,6 +22,7 @@ import model.strategy.CalcularPrioridad;
 import model.strategy.IPrioridad;
 import model.strategy.StrategyPrioridadCercania;
 import model.strategy.StrategyPrioridadGravedad;
+import utils.TipoEmergencia;
 
 // Clase principal que implementa el patrón Singleton y gestiona emergencias
 public class SistemaEmergencias implements SujetoEmergencias {
@@ -35,6 +36,9 @@ public class SistemaEmergencias implements SujetoEmergencias {
     private IPrioridad strategyPrioridad; // Estrategia para calcular prioridad
     private int emergenciasAtendidas; // Contador de emergencias atendidas
     private long tiempoTotalAtencion; // Tiempo total de atención acumulado
+    private int notificacionesPendientesBomberos;//Contador de notificaciones pendientes
+    private int notificacionesPendientesPolicia;//Contador de notificaciones pendientes
+    private int notificacionesPendientesAmbulancia;//Contador de notificaciones pendientes
 
     // Constructor privado para implementar el patrón Singleton
     private SistemaEmergencias() {
@@ -44,6 +48,9 @@ public class SistemaEmergencias implements SujetoEmergencias {
         observadores = new ArrayList<>();
         emergenciasAtendidas = 0;
         tiempoTotalAtencion = 0;
+        notificacionesPendientesBomberos = 0;
+        notificacionesPendientesPolicia = 0;
+        notificacionesPendientesAmbulancia = 0;
     }
 
     // Método para obtener la instancia única del sistema
@@ -57,7 +64,12 @@ public class SistemaEmergencias implements SujetoEmergencias {
     // Métodos para gestionar observadores (patrón Observer)
     @Override
     public void agregarObserver(ObserverEmergencias observerEmergencias) {
-        observadores.add(observerEmergencias);
+        if (observadores.contains(observerEmergencias)){
+            System.out.println("Ya existe una suscripción con este nombre");
+        }else{
+            observadores.add(observerEmergencias);
+            System.out.println("Suscripción realizada exitosamente");
+        }        
     }
 
     @Override
@@ -100,7 +112,14 @@ public class SistemaEmergencias implements SujetoEmergencias {
     // Registra una nueva emergencia y notifica a los observadores
     public void registrarNuevaEmergencia(Emergencia e) {
         listaEmergencias.add(e);
-        notificarEmergencias(e);
+        //notificarEmergencias(e);
+        if(e.getTipo().equals(TipoEmergencia.ACCIDENTE_VEHICULAR)){
+            notificacionesPendientesAmbulancia++;
+        }else if(e.getTipo().equals(TipoEmergencia.INCENDIO)){
+            notificacionesPendientesBomberos++;
+        }else{
+            notificacionesPendientesPolicia++;
+        }
     }
 
     // Obtiene la lista de emergencias pendientes

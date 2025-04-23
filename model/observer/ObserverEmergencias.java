@@ -1,5 +1,7 @@
 package model.observer;
 
+import java.util.List;
+
 import model.factoryEmerencias.Emergencia;
 
 /**
@@ -9,20 +11,14 @@ import model.factoryEmerencias.Emergencia;
 public interface ObserverEmergencias {
 
     /**
-     * Método llamado cuando hay nuevas emergencias.
-     * @param emergencia Objeto de tipo Emergencia que representa la nueva emergencia.
-     */
-    void onNuevasEmergencias(Emergencia emergencia);
-
-    /**
      * Método llamado cuando una emergencia ha sido atendida.
      * @param emergencia Objeto de tipo Emergencia que representa la emergencia atendida.
      */
-    void onEmergenciaAtendida(Emergencia emergencia);
+    void onEmergenciaAtendida(List<Emergencia> emergencias);
 
     /**
      * Método llamado cuando una emergencia no ha sido atendida.
      * @param emergencia Objeto de tipo Emergencia que representa la emergencia no atendida.
      */
-    void onEmergenciaNoAtendida(Emergencia emergencia);
+    void onEmergenciaNoAtendida(List<Emergencia> emergencias);
 }

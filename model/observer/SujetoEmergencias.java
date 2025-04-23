@@ -1,7 +1,11 @@
 package model.observer;
 
-// Importa la clase Emergencia desde el paquete factoryEmerencias
+import java.util.List;
+
 import model.factoryEmerencias.Emergencia;
+
+// Importa la clase Emergencia desde el paquete factoryEmerencias
+
 
 // Interfaz que define el comportamiento de un sujeto en el patrón Observer
 public interface SujetoEmergencias {
@@ -13,6 +17,6 @@ public interface SujetoEmergencias {
     void eliminarObserver(ObserverEmergencias observerEmergencias);
     
     // Método para notificar a todos los observadores sobre una emergencia
-    void notificarEmergencias(Emergencia emergencia);
+    void notificarEmergencias(List<Emergencia> emergencias);
 
 }

@@ -1,11 +1,15 @@
 package model.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 // Importación de la clase Emergencia desde el paquete correspondiente
 import model.factoryEmerencias.Emergencia;
 import utils.Agencias;
+import model.observer.ObserverEmergencias;
 
 // Clase Bomberos que extiende de ServicioEmergenciaBase
-public class Bomberos extends ServicioEmergenciaBase {
+public class Bomberos extends ServicioEmergenciaBase implements ObserverEmergencias {
 
     private Agencias nombre;
 
@@ -14,6 +18,7 @@ public class Bomberos extends ServicioEmergenciaBase {
         super(id, personalDisponible, vehiculosDisponibles, combustible);
     }
 
+    // Constructor de la clase Bomberos que inicializa un atributo propio de la clase
     public Bomberos(Agencias nombre){
         super(null,0,0,0.0);
         this.nombre = nombre;
@@ -44,5 +49,34 @@ public class Bomberos extends ServicioEmergenciaBase {
     @Override
     public int hashCode() {
         return nombre.hashCode(); // Genera un hash basado en el atributo relevante
+    }
+
+    @Override
+    public void onEmergenciaAtendida(List<Emergencia> emergencias) {
+        if (emergencias.isEmpty()) {
+            System.out.println("No hay emergencias atendidas.");
+            return;
+        }
+        
+        List<Emergencia> emergenciasAtendidas = emergencias.stream()
+        .filter(e -> e.isAtendida()).collect(Collectors.toList());
+        
+        System.out.println("\n=== NOTIFICACIONES AGENCIA: BOMBEROS ===");
+        System.out.println("Emergencias atendidas:");
+        System.out.println(emergenciasAtendidas.toString());
+    }
+
+    @Override
+    public void onEmergenciaNoAtendida(List<Emergencia> emergencias) {
+        if (emergencias.isEmpty()) {
+            System.out.println("No hay emergencias no atendidas.");
+            return;
+        }
+        
+        List<Emergencia> emergenciasNoAtendidas = emergencias.stream()
+        .filter(e -> !e.isAtendida()).collect(Collectors.toList());
+        
+        System.out.println("\nEmergencias atendidas:");
+        System.out.println(emergenciasNoAtendidas.toString());
     }
 }

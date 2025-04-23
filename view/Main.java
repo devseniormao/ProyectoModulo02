@@ -12,6 +12,7 @@ import model.services.Policia;
 import utils.NivelGravedad;
 import utils.TipoEmergencia;
 import utils.Ubicacion;
+import model.observer.ObserverEmergencias;
 
 public class Main {
 
@@ -19,7 +20,7 @@ public class Main {
         // Singleton para obtener la instancia del sistema de emergencias
         SistemaEmergencias sistema = SistemaEmergencias.getInstance();
         SubmenuNotificaciones submenuNotificaciones = new SubmenuNotificaciones();
-
+        
         // Inicializar recursos de demostración
         inicializarRecursosDemo(sistema);
         Scanner sc = new Scanner(System.in);
@@ -32,9 +33,8 @@ public class Main {
             System.out.println("2. Ver estado de recursos disponibles");
             System.out.println("3. Atender una emergencia");
             System.out.println("4. Mostrar estadísticas del día");
-            System.out.println("5. Finalizar jornada (cerrar sistema)");
-            System.out.println("6. Agencias");
-            System.out.println("7. Notificaciones");
+            System.out.println("5. Notificaciones");
+            System.out.println("6. Finalizar jornada (cerrar sistema)");
           
             // Verificar si hay emergencias pendientes
             sistema.verificarEmergenciasPendientes();
@@ -53,27 +53,30 @@ public class Main {
             // Manejar las opciones del menú
             switch (opcion) {
                 case 1:
+                    // Registrar una nueva emergencia
                     registrarEmergenciaMenu(sistema, sc);
                     break;
                 case 2:
+                    // Mostrar el estado de los recursos disponibles
                     sistema.mostrarEstadoRecursos();
                     break;
                 case 3:
+                    // Atender una emergencia
                     atenderEmergenciaMenu(sistema, sc);
                     break;
                 case 4:
+                    // Mostrar estadísticas del día
                     sistema.mostrarEstadisticas();
                     break;
                 case 5:
+                    // Mostrar el submenú de notificaciones
+                    submenuNotificaciones.mostrarSubmenuNotificaciones(sistema, sc);
+                    break;
+                case 6:
+                    // Finalizar la jornada y cerrar el sistema
                     System.out.println("Finalizando jornada...");
                     sistema.finalizarJornada();
                     salir = true;
-                    break;
-                case 6:
-                    mostrarSubmenuAgencias(sistema, sc);
-                    break;
-                case 7:
-                    submenuNotificaciones.mostrarSubmenuNotificaciones(sistema, sc);
                     break;
                 default:
                     System.out.println("Opción inválida. Intente de nuevo.");
@@ -118,12 +121,15 @@ public class Main {
         TipoEmergencia tipo = null;
         switch (Integer.parseInt(sc.nextLine())) {
             case 1:
+                // Tipo de emergencia: Incendio
                 tipo = TipoEmergencia.INCENDIO;
                 break;
             case 2:
+                // Tipo de emergencia: Accidente Vehicular
                 tipo = TipoEmergencia.ACCIDENTE_VEHICULAR;
                 break;
             case 3:
+                // Tipo de emergencia: Robo
                 tipo = TipoEmergencia.ROBO;
                 break;
             default:
@@ -169,7 +175,7 @@ public class Main {
                 nivelGravedad = NivelGravedad.ALTO;
                 break;
             default:
-            System.out.println("Nivel de gravedad inválido.");
+                System.out.println("Nivel de gravedad inválido.");
                 return;
         }
 
@@ -197,6 +203,7 @@ public class Main {
     
     // Menú para atender una emergencia
     private static void atenderEmergenciaMenu(SistemaEmergencias sistema, Scanner sc) {
+        // Obtener la lista de emergencias pendientes
         List<Emergencia> pendientes = sistema.getEmergenciasPendientes();
         if (pendientes.isEmpty()) {
             System.out.println("No hay emergencias pendientes.");
@@ -204,45 +211,21 @@ public class Main {
         }
 
         System.out.println("\n=== ATENDER EMERGENCIA ===");
+        // Mostrar las emergencias pendientes
         for (int i = 0; i < pendientes.size(); i++) {
             System.out.println((i + 1) + ". " + pendientes.get(i).toString());
         }
-        System.out.print("Seleccione el número de la emergencia a atender: ");
+        System.out.print("Seleccione el número de la emergencia a atender\n(Digite 0 para volver al menú anterior): ");
         int indice = Integer.parseInt(sc.nextLine()) - 1;
         if (indice < 0 || indice >= pendientes.size()) {
             System.out.println("Índice inválido.");
-            return;
-            
+            return;            
         }
 
         // Asignar recursos y atender la emergencia seleccionada
         Emergencia emergencia = pendientes.get(indice);
         sistema.asignarRecursosAEmergencia(emergencia);
         sistema.atenderEmergencia(emergencia);
-    }
-
-    // Submenú para mostrar emergencias por agencia
-    private static void mostrarSubmenuAgencias(SistemaEmergencias sistema, Scanner sc) {
-        System.out.println("\n=== AGENCIAS ===");
-        System.out.println("1. Ambulancia");
-        System.out.println("2. Policía");
-        System.out.println("3. Bomberos");
-        System.out.print("Seleccione una opción: ");
-
-        int opcion = Integer.parseInt(sc.nextLine());
-        switch (opcion) {
-            case 1:
-                sistema.mostrarEmergenciasPorAgencia("Ambulancia");
-                break;
-            case 2:
-                sistema.mostrarEmergenciasPorAgencia("Policía");
-                break;
-            case 3:
-                sistema.mostrarEmergenciasPorAgencia("Bomberos");
-                break;
-            default:
-                System.out.println("Opción inválida.");
-        }
     }
     
 }

@@ -36,9 +36,7 @@ public class SistemaEmergencias implements SujetoEmergencias {
     private IPrioridad strategyPrioridad; // Estrategia para calcular prioridad
     private int emergenciasAtendidas; // Contador de emergencias atendidas
     private long tiempoTotalAtencion; // Tiempo total de atención acumulado
-    private int notificacionesPendientesBomberos;//Contador de notificaciones pendientes
-    private int notificacionesPendientesPolicia;//Contador de notificaciones pendientes
-    private int notificacionesPendientesAmbulancia;//Contador de notificaciones pendientes
+    private int[] notificacionesPendientes; // 0 Policia, 1 Bomberos, 2 Ambulancias
 
     // Constructor privado para implementar el patrón Singleton
     private SistemaEmergencias() {
@@ -48,9 +46,15 @@ public class SistemaEmergencias implements SujetoEmergencias {
         observadores = new ArrayList<>();
         emergenciasAtendidas = 0;
         tiempoTotalAtencion = 0;
-        notificacionesPendientesBomberos = 0;
-        notificacionesPendientesPolicia = 0;
-        notificacionesPendientesAmbulancia = 0;
+        notificacionesPendientes = new int[3];
+    }
+
+    public List<ObserverEmergencias> getObservadores() {
+        return observadores;
+    }
+
+    public List<Emergencia> getListaEmergencias() {
+        return listaEmergencias;
     }
 
     // Método para obtener la instancia única del sistema
@@ -61,31 +65,71 @@ public class SistemaEmergencias implements SujetoEmergencias {
         return instance;
     }
 
+    public int[] getNotificacionesPendientes() {
+        return notificacionesPendientes;
+    }
+
     // Métodos para gestionar observadores (patrón Observer)
     @Override
     public void agregarObserver(ObserverEmergencias observerEmergencias) {
-        if (observadores.contains(observerEmergencias)){
+        if (observadores.contains(observerEmergencias)) {
             System.out.println("Ya existe una suscripción con este nombre");
-        }else{
+        } else {
             observadores.add(observerEmergencias);
             System.out.println("Suscripción realizada exitosamente");
-        }        
+        }
     }
 
     @Override
     public void eliminarObserver(ObserverEmergencias observerEmergencias) {
-        observadores.remove(observerEmergencias);
+        if (observadores.contains(observerEmergencias)) {
+            observadores.remove(observerEmergencias);
+            System.out.println("Suscripción eliminada exitosamente");
+        } else {
+            System.out.println("Actualmente no existe una suscripción para esta agencia");
+        }
+    }
+
+    public List<Emergencia> getEmergenciasAmbulancia() {
+        // Filtrar las emergencias para ambulancia
+        List<Emergencia> emergenciasAmbulancia = listaEmergencias.stream()
+                .filter(r -> r.getTipo().equals(TipoEmergencia.ACCIDENTE_VEHICULAR))
+                .collect(Collectors.toList());
+        return emergenciasAmbulancia;
+    }
+
+    public List<Emergencia> getEmergenciasPolicia() {
+        // Filtrar las emergencias para policia
+        List<Emergencia> emergenciasPolicia = listaEmergencias.stream()
+                .filter(r -> r.getTipo().equals(TipoEmergencia.ROBO))
+                .collect(Collectors.toList());
+        return emergenciasPolicia;
+    }
+
+    public List<Emergencia> getEmergenciasBomberos() {
+        // Filtrar las emergencias para bomberos
+        List<Emergencia> emergenciasBomberos = listaEmergencias.stream()
+                .filter(r -> r.getTipo().equals(TipoEmergencia.INCENDIO))
+                .collect(Collectors.toList());
+        return emergenciasBomberos;
     }
 
     @Override
-    public void notificarEmergencias(Emergencia emergencia) {
-        // Notifica a los observadores sobre el estado de una emergencia
-        for (ObserverEmergencias observer : observadores) {
-            if (emergencia.isAtendida()) {
-                observer.onEmergenciaAtendida(emergencia);
-            } else {
-                observer.onEmergenciaNoAtendida(emergencia);
-            }
+    public void notificarEmergencias(List<Emergencia> emergencias) {
+
+        // Notificaciones para los observadores emergencias atendidas
+        if (observadores.isEmpty()) {
+            System.out.println("No has realizado la suscripción de ninguna agencia");
+            return;
+        }
+
+        for (ObserverEmergencias observerEmergencias : observadores) {
+            observerEmergencias.onEmergenciaAtendida(emergencias);
+        }
+
+        // Notificaciones para los observadores emergencias no atendidas
+        for (ObserverEmergencias observerEmergencias : observadores) {
+            observerEmergencias.onEmergenciaNoAtendida(emergencias);
         }
     }
 
@@ -109,35 +153,36 @@ public class SistemaEmergencias implements SujetoEmergencias {
                 .collect(Collectors.toList());
     }
 
-    // Registra una nueva emergencia y notifica a los observadores
+    // Registra una nueva emergencia y actualiza las notificaciones pendientes
     public void registrarNuevaEmergencia(Emergencia e) {
-        listaEmergencias.add(e);
-        //notificarEmergencias(e);
-        if(e.getTipo().equals(TipoEmergencia.ACCIDENTE_VEHICULAR)){
-            notificacionesPendientesAmbulancia++;
-        }else if(e.getTipo().equals(TipoEmergencia.INCENDIO)){
-            notificacionesPendientesBomberos++;
-        }else{
-            notificacionesPendientesPolicia++;
+        listaEmergencias.add(e); // Agrega la emergencia a la lista
+        // Incrementa el contador de notificaciones pendientes según el tipo de emergencia
+        if (e.getTipo().equals(TipoEmergencia.ACCIDENTE_VEHICULAR)) {
+            notificacionesPendientes[2]++; // Notificación para ambulancias
+        } else if (e.getTipo().equals(TipoEmergencia.INCENDIO)) {
+            notificacionesPendientes[1]++; // Notificación para bomberos
+        } else {
+            notificacionesPendientes[0]++; // Notificación para policía
         }
     }
 
-    // Obtiene la lista de emergencias pendientes
+    // Obtiene la lista de emergencias pendientes (no atendidas)
     public List<Emergencia> getEmergenciasPendientes() {
         return listaEmergencias.stream()
-                .filter(e -> !e.isAtendida())
+                .filter(e -> !e.isAtendida()) // Filtra las emergencias no atendidas
                 .collect(Collectors.toList());
     }
 
-    // Obtiene la lista de emergencias en curso
+    // Obtiene la lista de emergencias en curso (atendidas)
     public List<Emergencia> getEmergenciasEnCurso() {
         return listaEmergencias.stream()
-                .filter(e -> e.isAtendida())
+                .filter(e -> e.isAtendida()) // Filtra las emergencias atendidas
                 .collect(Collectors.toList());
     }
 
     // Asigna recursos a una emergencia según su tipo
     public void asignarRecursosAEmergencia(Emergencia emergencia) {
+        // Filtra los recursos disponibles
         List<IServicioEmergencia> disponibles = filtrarRecursosDisponibles();
         if (disponibles.isEmpty()) {
             System.out.println("No hay recursos disponibles para esta emergencia.");
@@ -147,6 +192,7 @@ public class SistemaEmergencias implements SujetoEmergencias {
 
         // Asignación específica según el tipo de emergencia
         if (emergencia instanceof Incendio) {
+            // Asigna recursos de bomberos
             for (IServicioEmergencia r : disponibles) {
                 if (r instanceof Bomberos) {
                     r.atenderEmergencia(emergencia);
@@ -154,6 +200,7 @@ public class SistemaEmergencias implements SujetoEmergencias {
                 }
             }
         } else if (emergencia instanceof AccidenteVehicular) {
+            // Asigna recursos de ambulancias
             for (IServicioEmergencia r : disponibles) {
                 if (r instanceof Ambulancia) {
                     r.atenderEmergencia(emergencia);
@@ -161,6 +208,7 @@ public class SistemaEmergencias implements SujetoEmergencias {
                 }
             }
         } else if (emergencia instanceof Robo) {
+            // Asigna recursos de policía
             for (IServicioEmergencia r : disponibles) {
                 if (r instanceof Policia) {
                     r.atenderEmergencia(emergencia);
@@ -265,36 +313,7 @@ public class SistemaEmergencias implements SujetoEmergencias {
         CalcularPrioridad gravedad = new CalcularPrioridad(new StrategyPrioridadGravedad());
 
         double prioridad = ((gravedad.calcularPrioridad(emergencia) / 3.0) * 70)
-                         + ((distancia.calcularPrioridad(emergencia) / 10.0) * 30);
+                + ((distancia.calcularPrioridad(emergencia) / 10.0) * 30);
         return prioridad;
-    }
-
-    // Muestra emergencias filtradas por agencia
-    public void mostrarEmergenciasPorAgencia(String agencia) {
-        System.out.println("\n=== EMERGENCIAS PARA " + agencia.toUpperCase() + " ===");
-        List<Emergencia> atendidas = listaEmergencias.stream()
-                .filter(e -> e.isAtendida() && obtenerTipoRecurso(e).equalsIgnoreCase(agencia))
-                .collect(Collectors.toList());
-        List<Emergencia> noAtendidas = listaEmergencias.stream()
-                .filter(e -> !e.isAtendida() && obtenerTipoRecurso(e).equalsIgnoreCase(agencia))
-                .collect(Collectors.toList());
-
-        System.out.println("Emergencias atendidas:");
-        atendidas.forEach(e -> System.out.println(e.toString()));
-
-        System.out.println("\nEmergencias no atendidas:");
-        noAtendidas.forEach(e -> System.out.println(e.toString()));
-    }
-
-    // Obtiene el tipo de recurso asociado a una emergencia
-    private String obtenerTipoRecurso(Emergencia emergencia) {
-        if (emergencia instanceof AccidenteVehicular) {
-            return "Ambulancia";
-        } else if (emergencia instanceof Robo) {
-            return "Policía";
-        } else if (emergencia instanceof Incendio) {
-            return "Bomberos";
-        }
-        return "Desconocido";
     }
 }

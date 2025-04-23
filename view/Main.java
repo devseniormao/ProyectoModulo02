@@ -32,9 +32,10 @@ public class Main {
             System.out.println("1. Registrar una nueva emergencia");
             System.out.println("2. Ver estado de recursos disponibles");
             System.out.println("3. Atender una emergencia");
-            System.out.println("4. Mostrar estadísticas del día");
-            System.out.println("5. Notificaciones");
-            System.out.println("6. Finalizar jornada (cerrar sistema)");
+            System.out.println("4. Reasignar recursos a una emergencia");
+            System.out.println("5. Mostrar estadísticas del día");
+            System.out.println("6. Notificaciones");
+            System.out.println("7. Finalizar jornada (cerrar sistema)");
           
             // Verificar si hay emergencias pendientes
             sistema.verificarEmergenciasPendientes();
@@ -65,15 +66,17 @@ public class Main {
                     atenderEmergenciaMenu(sistema, sc);
                     break;
                 case 4:
+                    reasignarRecursosMenu(sistema, sc);
+                    break;
+                case 5:
                     // Mostrar estadísticas del día
                     sistema.mostrarEstadisticas();
                     break;
-                case 5:
+                case 6:
                     // Mostrar el submenú de notificaciones
                     submenuNotificaciones.mostrarSubmenuNotificaciones(sistema, sc);
                     break;
-                case 6:
-                    // Finalizar la jornada y cerrar el sistema
+                case 7:
                     System.out.println("Finalizando jornada...");
                     sistema.finalizarJornada();
                     salir = true;
@@ -226,6 +229,27 @@ public class Main {
         Emergencia emergencia = pendientes.get(indice);
         sistema.asignarRecursosAEmergencia(emergencia);
         sistema.atenderEmergencia(emergencia);
-    }
+    } 
+
+    private static void reasignarRecursosMenu(SistemaEmergencias sistema, Scanner sc) {
+        List<Emergencia> enCurso = sistema.getEmergenciasEnCurso();
+        if (enCurso.isEmpty()) {
+            System.out.println("No hay emergencias en curso para reasignar recursos.");
+            return;
+        }
     
+        System.out.println("\n=== REASIGNAR RECURSOS ===");
+        for (int i = 0; i < enCurso.size(); i++) {
+            System.out.println((i + 1) + ". " + enCurso.get(i).toString());
+        }
+        System.out.print("Seleccione el número de la emergencia para reasignar recursos: ");
+        int indice = Integer.parseInt(sc.nextLine()) - 1;
+        if (indice < 0 || indice >= enCurso.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+    
+        Emergencia emergencia = enCurso.get(indice);
+        sistema.reasignarRecursosAEmergencia(emergencia);
+    }
 }
